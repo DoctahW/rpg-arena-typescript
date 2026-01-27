@@ -1,3 +1,3 @@
-# rpg_arena_ts
+# rpg-arena-typescript
 
 Jogo simples de combate de classes.
