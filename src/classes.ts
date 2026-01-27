@@ -3,8 +3,12 @@ import { Personagem } from "./index";
 import { PersonagemMortoError } from "./errors";
 
 export class Guerreiro extends Personagem {
+  private _defesaReduzida: boolean = false;
+  private _defesaOriginal: number;
+
   constructor(nome: string) {
     super(nome, ClassePersonagem.Guerreiro, 150, 18, 10);
+    this._defesaOriginal = this.defesa;
   }
 
   golpeBrutal(alvo: Personagem): number {
@@ -18,7 +22,11 @@ export class Guerreiro extends Personagem {
     const dano = this.ataque * 2 - alvo.defesa;
     alvo.vida -= dano;
 
+    this.defesa = Math.floor(this._defesaOriginal / 2);
+    this._defesaReduzida = true;
+
     console.log(`${this.nome} usou GOLPE BRUTAL em ${alvo.nome}!`);
+    console.log(`${this.nome} vai ter sua defesa reduzida!`);
     console.log(`Causou ${dano} de dano devastador!`);
     console.log(`${alvo.nome} ficou com ${alvo.vida}/${alvo.vidaMaxima} HP`);
     return dano;
