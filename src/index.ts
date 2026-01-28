@@ -23,6 +23,8 @@ export interface IItem {
 export class Personagem {
   private _vida: number;
   private _vidaMax: number;
+  private _mana: number;
+  private _manaMax: number;
   private _inventario: IItem[] = [];
   private static readonly MAX_INVENTARIO = 5;
 
@@ -37,6 +39,7 @@ export class Personagem {
     vida: number,
     ataque: number,
     defesa: number,
+    mana: number = 0,
   ) {
     this.nome = nome;
     this.classe = classe;
@@ -44,24 +47,28 @@ export class Personagem {
     this.defesa = defesa;
     this._vida = vida;
     this._vidaMax = vida;
+    this._mana = mana;
+    this._manaMax = mana;
   }
 
   get vida(): number {
     return this._vida;
   }
-
   set vida(valor: number) {
-    if (valor < 0) {
-      this._vida = 0;
-    } else if (valor > this._vidaMax) {
-      this._vida = this._vidaMax;
-    } else {
-      this._vida = valor;
-    }
+    this._vida = clamp(valor, 0, this._vidaMax);
   }
-
   get vidaMaxima(): number {
     return this._vidaMax;
+  }
+
+  get mana(): number {
+    return this._mana;
+  }
+  set mana(valor: number) {
+    this._mana = clamp(valor, 0, this._manaMax);
+  }
+  get manaMaxima(): number {
+    return this._manaMax;
   }
 
   get inventario(): IItem[] {
@@ -80,13 +87,22 @@ export class Personagem {
     return dano;
   }
 
+  curar(valor: number) {
+    this._vida = clamp(this._vida + valor, 0, this._vidaMax);
+  }
+
   exibirStatus(): void {
     console.log(`\n📊 Status de ${this.nome} (${this.classe})`);
     console.log(`Vida: ${this._vida}/${this._vidaMax}`);
     console.log(`Ataque: ${this.ataque}`);
     console.log(`Defesa: ${this.defesa}`);
+    console.log(`Mana: ${this._mana}/${this._manaMax}`);
     console.log(
       `Itens: ${this._inventario.length}/${Personagem.MAX_INVENTARIO}`,
     );
   }
+}
+
+export function clamp(valor: number, min: number, max: number): number {
+  return Math.max(min, Math.min(valor, max));
 }

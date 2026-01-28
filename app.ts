@@ -11,3 +11,5 @@ arena.addPersonagem(carlos);
 arena.addPersonagem(malu);
 
 arena.listarLutadores();
+
+arena.batalhar();
