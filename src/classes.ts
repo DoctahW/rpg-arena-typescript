@@ -1,6 +1,6 @@
 import { ClassePersonagem } from "./index";
 import { Personagem } from "./index";
-import { PersonagemMortoError } from "./errors";
+import { PersonagemMortoError, ManaInsuficienteError } from "./errors";
 
 export class Guerreiro extends Personagem {
   private _defesaReduzida: boolean = false;
@@ -64,7 +64,7 @@ export class Mago extends Personagem {
   bolaDeFogo(alvo: Personagem): number {
     const custoMana = 30;
     if (this.mana < custoMana) {
-      throw new Error("Mana insuficiente");
+      throw new ManaInsuficienteError(this.nome);
     }
 
     this.mana -= custoMana;
@@ -140,15 +140,17 @@ export class Arqueiro extends Personagem {
     const custoMana = 15;
     this._mana -= custoMana;
 
+    if (custoMana > this._mana) {
+      throw new ManaInsuficienteError(this.nome);
+    }
+
     const dano = this.ataque * 2 - Math.floor(alvo.defesa / 2);
     alvo.vida -= dano;
 
     console.log(`🎯 ${this.nome} disparou uma FLECHA PRECISA em ${alvo.nome}!`);
-    console.log(
-      `   Gastou ${custoMana} de mana (${this._mana}/${this._manaMax})`,
-    );
-    console.log(`   Causou ${dano} de dano perfurante!`);
-    console.log(`   ${alvo.nome} ficou com ${alvo.vida}/${alvo.vidaMaxima} HP`);
+    console.log(`Gastou ${custoMana} de mana (${this._mana}/${this._manaMax})`);
+    console.log(`Causou ${dano} de dano perfurante!`);
+    console.log(`${alvo.nome} ficou com ${alvo.vida}/${alvo.vidaMaxima} HP`);
 
     return dano;
   }

@@ -5,7 +5,7 @@ export enum ClassePersonagem {
   Ladino = "LADINO",
 }
 
-enum Raridade {
+export enum Raridade {
   Comum = "COMUM",
   Incomum = "INCOMUM",
   Raro = "RARO",
